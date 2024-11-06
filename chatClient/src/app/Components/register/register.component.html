@@ -1,0 +1,12 @@
+<div class="register">
+    <div class="card">
+        <h2 style="text-align: center;">Register</h2>
+        <input type="text" placeholder="Enter Your name" [(ngModel)]="register.name" />
+        <input type="email" placeholder="Enter Your email" [(ngModel)]="register.email" />
+        <input type="password" placeholder="Enter Your password" [(ngModel)]="register.password" />
+        <button class="btn btn-primary" (click)="onRegister()">Register</button>
+        <div style="text-align: center; padding:5px;">
+            Already Registered? <a href="/home">Login</a>
+        </div>
+    </div>
+</div>

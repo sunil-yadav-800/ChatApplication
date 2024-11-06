@@ -1,0 +1,9 @@
+<div class="login-card">
+    <div class="header">Login</div>
+    <input type="text" placeholder="Enter your email" [(ngModel)]="email" />
+    <input type="password" placeholder="Enter your password" [(ngModel)]="password">
+    <button class="btn btn-primary" (click)="onLogin()">Login</button>
+</div>
+<div class="footer">
+Not Registered? <a href="/register">Register</a>
+</div>

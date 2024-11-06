@@ -1,0 +1,26 @@
+<div class="header">
+    Home
+    <div class="loggedInUser">
+        <Strong *ngIf="isUserLoggedIn()">Welcome @{{loggedInUser?.name}}</Strong>
+        <button *ngIf="!isUserLoggedIn()" class="LoginBtn" (click)="onLoginClick()">Login</button>
+    </div>
+</div>
+
+<div class="container-fluid Home" *ngIf="isUserLoggedIn()">
+    <div class="row">
+        <div class="col-2 bg-primary users">
+            <app-user-list [users]="onlineUsers" [allUsers]="allUsers" (onUserChange)="onUserChange($event)"></app-user-list>
+        </div>
+        <div class="col-10 bg-secondary chat">
+            <app-user-chat [user]="selectedUser" [loggedInUser]="loggedInUser" (onSelectedUserReadMsgs)="onSelectedUserReadMsgs()" (IncrementUnreadMsgs)="IncrementUnreadMsgs($event)"></app-user-chat>
+        </div>
+    </div>
+</div>
+<div class="login" *ngIf="loginVisible">
+    <span class="close" (click)="onCrossClick()">X</span>
+    <app-login (loginAlert)="loginAlert($event)"></app-login>
+</div>
+<div class="noLogin" *ngIf="!isUserLoggedIn()">
+</div>
+
+
