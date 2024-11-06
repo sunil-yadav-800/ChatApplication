@@ -1,0 +1,26 @@
+<div class="chat" *ngIf="user">
+    <div class="user-header">
+        <h2 style="text-align: center;">{{user?.Name}}</h2>
+        <hr style="background-color: red;height: 2px;">
+    </div>
+    <div class="chat-content">
+        <ng-container *ngFor="let msg of allMessages; let i = index" >
+            <div [ngClass]="msg?.From == loggedInUser?.userId ? 'card right':'card left'" style="width: 18rem;">
+                {{msg?.Content}}
+                <span style="text-align: right;"><small>{{msg.CreatedAt | date:'d/M/yy, h:mm a'}} 
+                    <mat-icon class="sent" *ngIf="!msg?.IsSeen && msg?.From == loggedInUser?.userId" >check</mat-icon>
+                    <mat-icon class="seen" *ngIf="msg?.IsSeen && msg?.From == loggedInUser?.userId">done_all</mat-icon>
+                </small></span>
+                    
+            </div>
+        </ng-container>
+        <div #scrollMe></div>
+    </div>
+    <div class="sendMessage">
+        <input type="text" [(ngModel)]="msg" />
+        <button class="btn btn-primary" (click)="SendMessage()">Send</button>
+    </div>
+</div>
+<div class="selectUser" *ngIf="!user">
+    <h1>Please select user from left panel to chat</h1>
+</div>

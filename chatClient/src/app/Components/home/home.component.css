@@ -1,0 +1,71 @@
+.header{
+    background-color: aqua;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    align-items: center;
+}
+.Home{
+    margin-top: 60px;
+    position: fixed;
+}
+.row{
+    min-height: calc(100vh - 30px);
+}
+.row .col-2,.col-10{
+    padding: 0px !important;
+}
+.loggedInUser{
+    align-items: center;
+}
+
+.loggedInUser ul{
+    list-style-type: none;
+    display: flex;
+    /* gap: 10px; */
+}
+.LoginBtn{
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0px 25px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.noLogin{
+    background-color: black;
+    min-height: 100vh;
+}
+.login{
+    height: 370px;
+    width: 500px;
+    background-color: lightgray;
+    /* margin: 0px auto; */
+    padding: 40px 20px;
+    position: absolute;
+    z-index: 10;
+    top: 150px;
+    left: 400px;
+    border-radius: 20px;
+    box-shadow: yellowgreen;
+}
+.close{
+    background-color: rgb(97, 81, 1);
+    border-radius: 50%;
+    color: white;
+    padding: 2px 2px;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    align-items: center;
+    text-align: center;
+    top: 10px;
+    right: 8px;
+    cursor: pointer;
+}
