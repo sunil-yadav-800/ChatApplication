@@ -1,0 +1,22 @@
+Run Kafka broker
+
+---------------------------------------------------------
+Approach 1 -- using kafka command.
+docker run -d --name broker apache/kafka:latest
+docker rm -f broker
+---------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------
+Approach 2 -- using docker-compose.yaml file. (for custom configuration)
+
+1. first visit the path where docker-compose.yaml exists and open cmd there.
+2. docker compose up -d                                                                  [to start container.]
+3. docker exec --workdir /opt/kafka/bin/ -it broker sh                                   [to work with kafka]
+4. ./kafka-topics.sh --bootstrap-server 192.168.31.46:29092 --create --topic message     [to create topic message]
+5. docker compose down                                                                   [to stop container]
+
+
+** ./kafka-topics.sh --list --bootstrap-server 0.0.0.0:9092                              [to list all topics]
+
+-----------------------------------------------------------------------------------------------------------------------
+
