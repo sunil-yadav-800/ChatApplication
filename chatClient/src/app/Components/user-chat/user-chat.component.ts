@@ -16,6 +16,7 @@ export class UserChatComponent implements OnInit, OnChanges, AfterViewChecked {
   msg: string=''
   @Output() onSelectedUserReadMsgs = new EventEmitter<any>();
   @Output() IncrementUnreadMsgs = new EventEmitter<any>();
+  isScrollToBottom: boolean = true;
   constructor(private service:CommonService, private chatService:ChatService)
   {
     this.chatService.newMessage$.subscribe((message)=>{
@@ -34,7 +35,10 @@ export class UserChatComponent implements OnInit, OnChanges, AfterViewChecked {
         this.playSound()
 
         if(message?.to == this.loggedInUser?.userId && message?.from == this.user?.Id){
-          this.markUnreadMessageAsSeen();
+          setTimeout(()=>
+          {
+            this.markUnreadMessageAsSeen();
+          },1000)
         }
       }
       else if(message?.to == this.loggedInUser?.userId)

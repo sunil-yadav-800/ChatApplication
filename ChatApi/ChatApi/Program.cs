@@ -37,7 +37,7 @@ builder.Services.AddScoped<IUserRepo,UserRepo>();
 builder.Services.AddScoped<IMessageRepo, MessageRepo>();
 builder.Services.AddSingleton<UserConnectionManager>();
 builder.Services.AddSingleton<ProducerService>();
-//builder.Services.AddHostedService<ConsumerService>();
+builder.Services.AddHostedService<ConsumerService>();
 
 builder.Services.AddAuthentication(options =>
 {

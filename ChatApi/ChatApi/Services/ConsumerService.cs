@@ -23,15 +23,30 @@ namespace ChatApi.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await Task.Run(async () =>
+             {
+                 await ConsumeMessage(stoppingToken);
+             });
+            //await ConsumeMessage(stoppingToken);
+        }
+        private async Task ConsumeMessage(CancellationToken stoppingToken)
+        {
             _consumer.Subscribe("message");
-            while(!stoppingToken.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
             {
-                var consumeResult = _consumer.Consume(stoppingToken);
-
-                var message = JsonConvert.DeserializeObject<Message>(consumeResult.Message.Value);
-                if (message != null)
+                try
                 {
-                    await SaveMessageToDb(message);
+                    var consumeResult = _consumer.Consume(stoppingToken);
+
+                    var message = JsonConvert.DeserializeObject<Message>(consumeResult.Message.Value);
+                    if (message != null)
+                    {
+                        await SaveMessageToDb(message);
+                    }
+                }
+                catch (Exception ex)
+                {
+
                 }
             }
             _consumer.Close();

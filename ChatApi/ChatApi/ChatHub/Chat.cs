@@ -3,6 +3,7 @@ using ChatApi.HelperClass;
 using ChatApi.Models;
 using ChatApi.Repository;
 using ChatApi.Services;
+using Confluent.Kafka;
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
@@ -78,7 +79,8 @@ namespace ChatApi.ChatHub
             }
 
             //add message to the db async
-            Task saveMsgToDB = SaveMessageToDb(newMessage);
+            //Task saveMsgToDB = SaveMessageToDb(newMessage);
+            _ = _producerService.ProduceAsync("message", newMessage);
         }
 
         public async Task NotifySenderAboutMessageSeen(string senderUserId, string recieverUserId)
