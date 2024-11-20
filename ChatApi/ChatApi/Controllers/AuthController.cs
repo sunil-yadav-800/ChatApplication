@@ -2,6 +2,7 @@
 using ChatApi.HelperClass;
 using ChatApi.Models;
 using ChatApi.Repository;
+using ChatApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -13,10 +14,12 @@ namespace ChatApi.Controllers
     {
         private readonly IUserRepo _userRepo;
         private readonly IConfiguration _configuration;
-        public AuthController(IUserRepo userRepo, IConfiguration configuration)
+        private readonly IElasticSearchService _elasticsearchService;
+        public AuthController(IUserRepo userRepo, IConfiguration configuration, IElasticSearchService elasticsearchService)
         {
             _userRepo = userRepo;
             _configuration = configuration;
+            _elasticsearchService = elasticsearchService;
         }
 
         [HttpPost("Register")]
@@ -31,18 +34,38 @@ namespace ChatApi.Controllers
                     Email = registeration.Email,
                     Password = registeration.Password,
                 };
-                var res = await _userRepo.AddUser(newUser);
-                if (res)
+                bool isUserExist = await _userRepo.IsEmailAlreadyExist(newUser.Email);
+                if (!isUserExist)
                 {
-                    result.status = true;
-                    result.message = "User registration successful";
+                    var res = await _userRepo.AddUser(newUser);
+                    if (res)
+                    {
+                        User registeredUser = await _userRepo.AuthenticateAndGetUserInfo(newUser.Email, newUser.Password);
+                        if (registeredUser != null)
+                        {
+                            UserDto user = new UserDto
+                            {
+                                Id = registeredUser.Id.ToString(),
+                                Name = registeredUser.Name,
+                                Email = registeredUser.Email,
+                            };
+                            await _elasticsearchService.IndexUserAsync(user);
+                        }
+                        result.status = true;
+                        result.message = "User registration successful";
+                    }
+                    else
+                    {
+
+                        result.status = false;
+                        result.message = "User registration Unsuccessful";
+
+                    }
                 }
                 else
                 {
-
                     result.status = false;
-                    result.message = "User registration Unsuccessful";
-                        
+                    result.message = "Email is already taken. Please try with another emil";
                 }
             }
             catch(Exception ex)
@@ -111,6 +134,25 @@ namespace ChatApi.Controllers
             {
                 result.status = false;
                 result.message = "Error while fetching all users";
+
+            }
+            return JsonConvert.SerializeObject(result);
+        }
+
+        [HttpGet("SearchUsers/{searchTerm}")]
+        public async Task<string> SearchUsers(string searchTerm)
+        {
+            ResponseModel result = new ResponseModel();
+            try
+            {
+                var users = await _elasticsearchService.SearchUsersAsync(searchTerm);
+                result.status = true;
+                result.data = users;
+            }
+            catch (Exception ex)
+            {
+                result.status = false;
+                result.message = "Error while searching users";
 
             }
             return JsonConvert.SerializeObject(result);

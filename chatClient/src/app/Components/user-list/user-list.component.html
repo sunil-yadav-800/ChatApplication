@@ -2,6 +2,20 @@
 <div class="users">
     <h2 class="text-center">All Users</h2>
     <hr style="background-color: red;height: 2px;">
+    <div class="search" matAutocompleteOrigin #origin="matAutocompleteOrigin">
+        <input 
+            type="text" 
+            placeholder="Search user" 
+            [(ngModel)]="searchTerm" 
+            (ngModelChange)="onChange($event)"
+            [matAutocomplete]="auto"
+    [matAutocompleteConnectedTo]="origin">
+    </div>
+    <mat-autocomplete #auto="matAutocomplete" (closed)="onClose($event)" (optionSelected)="onOptionSelect($event)">
+        <mat-option *ngFor="let user of searchUserList" [value]="user">
+            {{user?.Name}}
+        </mat-option>
+    </mat-autocomplete>
     <div class="user-list">
         <ul *ngFor="let user of allUsers">
             <li [matBadge]="user.UnreadMessages" [matBadgeHidden]="user.UnreadMessages==0" matBadgeOverlap="false" (click)="onUserSelect(user)" class="text-center user">{{user?.Name}}<span [ngClass]="user?.IsOnline?'online':'offline'"></span></li>

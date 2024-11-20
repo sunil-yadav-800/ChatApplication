@@ -34,7 +34,7 @@ export class RegisterComponent implements OnInit {
       }
       else
       {
-        alert("something went wrong!");
+        alert(result?.message);
       }
     },(err)=>{
       alert("something went wrong!");
