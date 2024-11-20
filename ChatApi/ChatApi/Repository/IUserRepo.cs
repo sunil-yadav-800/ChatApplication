@@ -10,5 +10,6 @@ namespace ChatApi.Repository
         public Task<bool> RemoveUserById(Guid id);
         public Task<User> GetUserById(Guid id);
         public Task<List<UserDto>> GetAllUsers(string userId);
+        public Task<bool> IsEmailAlreadyExist(string email);
     }
 }

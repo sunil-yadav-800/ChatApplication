@@ -9,7 +9,7 @@
 <div class="container-fluid Home" *ngIf="isUserLoggedIn()">
     <div class="row">
         <div class="col-2 bg-primary users">
-            <app-user-list [users]="onlineUsers" [allUsers]="allUsers" (onUserChange)="onUserChange($event)"></app-user-list>
+            <app-user-list [users]="onlineUsers" [allUsers]="allUsers" (onUserChange)="onUserChange($event)" (onSelectUser)="onSelectUser($event)"></app-user-list>
         </div>
         <div class="col-10 bg-secondary chat">
             <app-user-chat [user]="selectedUser" [loggedInUser]="loggedInUser" (onSelectedUserReadMsgs)="onSelectedUserReadMsgs()" (IncrementUnreadMsgs)="IncrementUnreadMsgs($event)"></app-user-chat>

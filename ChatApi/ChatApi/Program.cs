@@ -1,11 +1,13 @@
 using ChatApi.ChatHub;
 using ChatApi.Entities;
 using ChatApi.HelperClass;
+using ChatApi.Models;
 using ChatApi.Repository;
 using ChatApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Nest;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +40,24 @@ builder.Services.AddScoped<IMessageRepo, MessageRepo>();
 builder.Services.AddSingleton<UserConnectionManager>();
 builder.Services.AddSingleton<ProducerService>();
 builder.Services.AddHostedService<ConsumerService>();
+
+//add elastic search
+builder.Services.AddSingleton<IElasticClient>(sp =>
+{
+    var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+        .DefaultIndex("users") // Default index name
+        .DefaultMappingFor<UserDto>(m => m
+            .PropertyName(p => p.Id, "id")
+            .PropertyName(p => p.Name, "name")
+            .PropertyName(p => p.Email, "email")
+        );
+
+    return new ElasticClient(settings);
+});
+
+builder.Services.AddScoped<IElasticSearchService, ElasticSearchService>();
+builder.Services.AddScoped<ElasticSearchInitializer>();
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -81,6 +101,13 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var elasticSearchInitializer = scope.ServiceProvider.GetRequiredService<ElasticSearchInitializer>();
+    await elasticSearchInitializer.InitializeAsync();
+}
+
 app.UseCors("cors");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

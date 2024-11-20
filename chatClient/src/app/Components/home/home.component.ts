@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
   { 
     this.chatService.onlineUsers$.subscribe((users)=>{
       this.onlineUsers = users.filter(user=>user.id != this.loggedInUser.userId);
-      console.log(this.allUsers)
+      //console.log(this.allUsers)
       this.allUsers.forEach((user)=>{
         if(user?.IsOnline)
         {
@@ -33,8 +33,8 @@ export class HomeComponent implements OnInit {
         }
       });
       
-      console.log(this.onlineUsers)
-      console.log(this.allUsers);
+      // console.log(this.onlineUsers)
+      // console.log(this.allUsers);
     },(err)=>{
       console.log(err);
     })
@@ -62,6 +62,24 @@ export class HomeComponent implements OnInit {
   onUserChange(user:any)
   {
     this.selectedUser = user;
+  }
+  onSelectUser(user: any){
+    if(user.Id.toLowerCase() != this.loggedInUser.userId)
+    {
+      let usr = {
+        Id: user?.Id.toLowerCase(),
+        Name: user?.Name,
+        Email: user?.Email,
+        UnreadMessages: user?.UnreadMessages,
+        IsOnline: false
+      };
+      let isUserInOnline = this.onlineUsers.find(u => u.id == usr?.Id)
+      if(isUserInOnline !== undefined)
+      {
+        usr.IsOnline = true;
+      }
+      this.allUsers = [usr,...this.allUsers]
+    }
   }
   isUserLoggedIn(): boolean{
     return this.loggedInUser==null?false:true;

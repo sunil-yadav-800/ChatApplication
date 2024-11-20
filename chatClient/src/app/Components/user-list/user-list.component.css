@@ -54,3 +54,9 @@
     background: #39a21f;
     position: unset;
 }
+.search input[type="text"]{
+    width: 100%;
+    margin-bottom: 20px;
+    margin-left: 2px;
+    padding-left: 5px;
+}

@@ -20,3 +20,7 @@ Approach 2 -- using docker-compose.yaml file. (for custom configuration)
 
 -----------------------------------------------------------------------------------------------------------------------
 
+docker-compose file config rule
+
+change 192.168.31.46 to host machine ip address.
+to check ip address in window use ipcofig

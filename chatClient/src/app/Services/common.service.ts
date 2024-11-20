@@ -31,4 +31,8 @@ export class CommonService {
   MarkMssagesAsSeen(payload: any){
     return this.http.post(this.BaseUrl+"api/Message/MarkMssagesAsSeen",payload);
   }
+  SearchUsers(searchTerm: string)
+  {
+    return this.http.get(this.BaseUrl+"api/Auth/SearchUsers/"+searchTerm);
+  }
 }

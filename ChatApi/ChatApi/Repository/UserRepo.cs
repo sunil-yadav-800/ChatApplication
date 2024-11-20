@@ -42,10 +42,36 @@ namespace ChatApi.Repository
             List<UserDto> users = new List<UserDto>();
             try
             {
-                var result = await _db.Users.ToListAsync();
+                //var result = await _db.Users.ToListAsync();
                 var loggedInUserId = new Guid(userId);
-                foreach (var user in result)
+
+                var toUserIds = await (from message in _db.Messages
+                                where(message.From == loggedInUserId)
+                                select message.To).ToListAsync();
+
+                var fromUserIds = await (from message in _db.Messages
+                                where (message.To == loggedInUserId)
+                                select message.From).ToListAsync();
+
+                List<Guid> userIds = new List<Guid>();
+                foreach(var user  in toUserIds)
                 {
+                    if(!userIds.Contains(user))
+                    { 
+                        userIds.Add(user); 
+                    }
+                }
+                foreach(var user in  fromUserIds)
+                {
+                    if (!userIds.Contains(user))
+                    {
+                        userIds.Add(user);
+                    }
+                }
+
+                foreach (var id in userIds)
+                {
+                    var user = await GetUserById(id);
                     var unreadMessages = 0;
                     if (user.Id != loggedInUserId)
                     {
@@ -92,6 +118,18 @@ namespace ChatApi.Repository
                 }
                 
                 return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        public async Task<bool> IsEmailAlreadyExist(string email)
+        {
+            try
+            {
+                User user = await _db.Users.FirstOrDefaultAsync(x => x.Email == email);
+                return user != null;
             }
             catch (Exception ex)
             {
